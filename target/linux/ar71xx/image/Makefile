@@ -1891,7 +1891,6 @@ Image/Build/AthLzma/buildkernel=$(call MkuImageLzma,$(2),$(3) $(4))
 Image/Build/AthLzma=$(call Image/Build/Ath,$(1),$(2),$(3),$(4),$(5),$(6),$(7))
 Image/Build/AthLzma/initramfs=$(call MkuImageLzma/initramfs,$(2),$(3) $(4))
 
-
 Image/Build/Belkin/buildkernel=$(call MkuImageLzma,$(2),$(3) $(4))
 Image/Build/Belkin/initramfs=$(call MkuImageLzma/initramfs,$(2),$(3) $(4))
 
@@ -2389,15 +2388,6 @@ endef
 
 TARGET_DEVICES += c-55
 
-define Image/Build/LininoLzma
-	$(call MkuImageLzma,$(2),$(3) $(4))
-	$(call Image/Build/Ath,$(1),$(2),$(3),$(4),$(5),$(6),$(7))
-endef
-
-define Image/Build/LininoLzma/initramfs
-	$(call MkuImageLzma/initramfs,$(2),$(3) $(4))
-endef
-
 $(eval $(call SingleProfile,ALFA,64k,ALFANX,alfa-nx,ALFA-NX,ttyS0,115200,$$(alfa_mtdlayout_8M),1638400,6291456,vmlinux.gz.uImage,pb9x-2.6.31-jffs2))
 $(eval $(call SingleProfile,ALFA,64k,HORNETUB,hornet-ub,HORNET-UB,ttyATH0,115200,$$(alfa_mtdlayout_8M),1638400,6291456,kernel_image,rootfs_image))
 $(eval $(call SingleProfile,ALFA,64k,TUBE2H8M,tube2h-8M,TUBE2H,ttyATH0,115200,$$(alfa_mtdlayout_8M),1638400,6291456,kernel.image,rootfs.image))
@@ -2433,6 +2423,7 @@ $(eval $(call SingleProfile,AthLzma,64k,EWDORINAP,ew-dorin,EW-DORIN,ttyATH0,1152
 $(eval $(call SingleProfile,AthLzma,64k,EWDORINRT,ew-dorin-router,EW-DORIN-ROUTER,ttyATH0,115200,$$(ew-dorin_mtdlayout_4M),KRuImage,65536))
 $(eval $(call SingleProfile,AthLzma,64k,EWDORIN16M,ew-dorin-16M,EW-DORIN,ttyATH0,115200,$$(ew-dorin_mtdlayout_16M),KRuImage,65536))
 $(eval $(call SingleProfile,AthLzma,64k,HORNETUBx2,hornet-ub-x2,HORNET-UB,ttyATH0,115200,$$(alfa_mtdlayout_16M),KRuImage,65536))
+$(eval $(call SingleProfile,AthLzma,64k,LININO_CHIWAWA,linino-chiwawa,LININO_CHIWAWA,ttyATH0,115200,$$(linino_mtdlayout_16M),RKuImage))
 $(eval $(call SingleProfile,AthLzma,64k,MR12,mr12,MR12,ttyS0,115200,$$(mr12_mtdlayout),RKuImage))
 $(eval $(call SingleProfile,AthLzma,64k,MR16,mr16,MR16,ttyS0,115200,$$(mr16_mtdlayout),RKuImage))
 $(eval $(call SingleProfile,AthLzma,64k,PB92,pb92,PB92,ttyS0,115200,$$(pb92_mtdlayout),KRuImage))
@@ -2556,7 +2547,6 @@ $(eval $(call SingleProfile,Zcomax,64k,ZCN1523H516,zcn-1523h-5-16,ZCN-1523H-5,tt
 
 $(eval $(call SingleProfile,ZyXEL,64k,NBG_460N_550N_550NH,nbg460n_550n_550nh,NBG460N,ttyS0,115200,NBG-460N))
 
-$(eval $(call SingleProfile,LininoLzma,$(fs_64k),LININO_CHIWAWA,linino-chiwawa,linino-chiwawa,ttyATH0,115200,$$(linino_mtdlayout_16M),1310720,15007744,RKuImage))
 
 $(eval $(call MultiProfile,AP121,AP121_2M AP121_4M AP121_8M AP121_16M))
 $(eval $(call MultiProfile,AP136,AP136_010 AP136_020))
@@ -2577,7 +2567,6 @@ $(eval $(call MultiProfile,WPJ344,WPJ344_16M))
 $(eval $(call MultiProfile,WPJ531,WPJ531_16M))
 $(eval $(call MultiProfile,WPJ558,WPJ558_16M))
 $(eval $(call MultiProfile,Yun,YUN_16M YUN_8M))
-$(eval $(call MultiProfile,C3Listeners,LININO_CHIWAWA GLINET))
 
 $(eval $(call MultiProfile,Minimal,$(SINGLE_PROFILES)))
 $(eval $(call MultiProfile,Madwifi,EAP7660D WP543))

@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+
+START=60
+
+start() {
+	# Set unique hostname
+	uci set system.@system[0].hostname=`cat /sys/class/net/wlan0/address |tr -d :`
+	uci commit system
+	echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname
+}

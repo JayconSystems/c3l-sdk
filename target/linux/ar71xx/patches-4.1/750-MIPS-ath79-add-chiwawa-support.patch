@@ -24,7 +24,7 @@
 +MIPS_MACHINE(ATH79_MACH_LININO_CHIWAWA, "linino-chiwawa", "Linino Chiwawa", ds_setup);
 --- /dev/null
 +++ b/arch/mips/ath79/mach-linino.c
-@@ -0,0 +1,285 @@
+@@ -0,0 +1,290 @@
 +/*
 + *  Linino board support
 + *
@@ -102,6 +102,7 @@
 + * following board: YUN, FREEDOG
 + */
 +
++#if defined (LININO_YUN) || defined (LININO_FREEDOG)
 +static struct spi_gpio_platform_data spi_bus1 = {
 +	.sck = LININO_GPIO_SPI_SCK,
 +	.mosi = LININO_GPIO_SPI_MOSI,
@@ -156,7 +157,7 @@
 +	/* Register GPIO SPI controller */
 +	platform_device_register(&linino_spi1_device);
 +}
-+
++#endif
 +
 +/* * * * * * * * * * * * * * * * * * SETUP * * * * * * * * * * * * * * * * * */
 +
@@ -204,15 +205,16 @@
 +	ath79_register_mdio(0, 0x0);
 +
 +	/* LAN ports */
-+	ath79_register_eth(1);
++	ath79_register_eth(0);
 +
 +	/* WAN port */
-+	ath79_register_eth(0);
++	ath79_register_eth(1);
 +}
 +
 +/*
 + * Enable level shifters
 + */
++#if defined(LININO_FREEDOG) || defined(LININO_YUN)
 +static void __init ds_setup_level_shifter_oe(void)
 +{
 +	int err;
@@ -252,7 +254,7 @@
 +                pr_err("mach-linino: error setting GPIO OE2\n");
 +	#endif
 +}
-+
++#endif
 +
 +/*
 + * Enable UART
@@ -302,13 +304,16 @@
 +	t |= AR933X_BOOTSTRAP_MDIO_GPIO_EN;
 +	ath79_reset_wr(AR933X_RESET_REG_BOOTSTRAP, t);
 +
-+	/* enable OE of level shifters */
-+	ds_setup_level_shifter_oe();
 +	/* enable uart */
 +	ds_setup_uart_enable();
 +
++#if defined(LININO_FREEDOG) || defined(LININO_YUN)
++	/* enable OE of level shifters */
++	ds_setup_level_shifter_oe();
++
 +	/* Register Software SPI controller */
 +	ds_register_spi();
++#endif
 +}
 --- a/arch/mips/ath79/machtypes.h
 +++ b/arch/mips/ath79/machtypes.h

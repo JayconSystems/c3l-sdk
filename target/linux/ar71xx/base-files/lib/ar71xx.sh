@@ -527,6 +527,9 @@ ar71xx_board_detect() {
 	*"Bullet M")
 		name="bullet-m"
 		;;
+	*"Linino Chiwawa")
+                name="linino-chiwawa"
+                ;;
 	*"Loco M XW")
 		name="loco-m-xw"
 		;;

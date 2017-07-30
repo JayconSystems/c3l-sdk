@@ -1,0 +1,42 @@
+#!/bin/sh
+
+## Watchdog script to reset listener hardware if the c3listener
+## process has failed to restart.
+
+MAX_DOWNTIME_SEC=30
+
+get_pids() {
+    pgrep c3listener
+}
+
+get_parent_pid() {
+    get_pids | head -n 1
+}
+
+child_still_running_p() {
+    pgrep -P $1 2>&1 > /dev/null
+}
+
+LAST_PID=0
+DEADLINE=$(( $(date +%s) + MAX_DOWNTIME_SEC ))
+
+logger "c3listener Watchdog Started"
+
+while /bin/true; do
+    ppid=$(get_parent_pid)
+
+    if [ $LAST_PID -ne $ppid ]; then
+	logger "watchdog: acquired new c3listener PID: ${ppid}"
+	LAST_PID=$ppid
+	sleep 5; # Wait for parent to spawn worker
+    fi
+
+    if child_still_running_p $ppid; then
+	DEADLINE=$(( $(date +%s) + MAX_DOWNTIME_SEC ))
+    fi
+
+    if [ $(date +%s) -gt $DEADLINE ]; then
+	reboot
+    fi
+    sleep 1
+done

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+tmpdir=$(mktemp -d)
+outdir=$(uci get system.@system[0].hostname)-$(date +%d-%m-%y_%H:%M:%S)
+outfile=${outdir}.tgz
+mkdir -p $tmpdir/$outdir
+
+cd $tmpdir/$outdir
+
+uname -a > uname.txt
+c3listener -v > version.txt
+hciconfig -a > bluetooth.txt
+logread > system.log
+uci show > uci.txt
+find /tmp -name \*.core -exec mv {} . \;
+cp /etc/c3listener.conf .
+cd ..
+tar -czf /tmp/${outdir}.tgz $outdir
+rm -r $tmpdir
+
+echo /tmp/${outfile}

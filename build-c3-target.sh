@@ -38,10 +38,10 @@ if [ -e $OUT_FILE ]; then
     exit 2
 fi
 
-cp ${TARGET}.config .config
-make clean
-make defconfig
-make $@
+gosu openwrt cp ${TARGET}.config .config
+gosu openwrt make clean
+gosu make defconfig
+gosu make $@
 if [ "${SRC_FILE}x" == "x" ]; then
     SRC_FILE=$(find ./bin/ar71xx -name "*squashfs-sysupgrade.bin" -print -quit)
 fi

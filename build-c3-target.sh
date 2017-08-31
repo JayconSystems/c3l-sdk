@@ -11,7 +11,10 @@ if [ ! -e ${TARGET}.config ]; then
 fi
 
 ./scripts/feeds update -a
-./scripts/feeds install -a
+./scripts/feeds install \
+		bluez-libs expat glib2 \
+		dbus c3listener libical \
+		c3-listener-hw-support c3-raspi-support
 
 FW_OUTPUT_DIR="c3-fw"
 VERSION=$(awk -F= '/PKG_VERSION:/ {print $2}' feeds/c3/c3listener/Makefile)

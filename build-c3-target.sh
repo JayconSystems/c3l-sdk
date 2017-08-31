@@ -5,7 +5,7 @@ set -e
 TARGET=$1
 shift # Remove target neme from args so $@ contains (optional) make args
 
-if [ -e ${TARGET}.config ]; then
+if [ ! -e ${TARGET}.config ]; then
     echo "Failed to build ${TARGET}: Config file ${TARGET}.config not found"
     exit 1
 fi

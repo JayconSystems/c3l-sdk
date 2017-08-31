@@ -39,7 +39,7 @@ if [ -e $OUT_FILE ]; then
 fi
 
 gosu openwrt cp ${TARGET}.config .config
-gosu openwrt $PWD/scripts/config/conf --defconfig ${TARGET}.config
+gosu openwrt make defconfig
 gosu openwrt make clean
 gosu openwrt make $@
 if [ "${SRC_FILE}x" == "x" ]; then

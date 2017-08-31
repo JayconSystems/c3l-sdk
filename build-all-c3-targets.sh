@@ -28,8 +28,8 @@ for config in $CONFIGS; do
 	continue
     else
 	cp ${config}.config .config
+	make defconfig
 	make clean
-	make defconfig 0<&-
 	make $@
 	if [ "${SRC_FILE}x" == "x" ]; then
 	    SRC_FILE=$(find ./bin/ar71xx -name "*squashfs-sysupgrade.bin" -print -quit)

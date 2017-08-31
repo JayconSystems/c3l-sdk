@@ -23,3 +23,6 @@ key-build*
 .emacs.desktop*
 TAGS*~
 git-src
+c3-fw/*bin
+c3-fw/*gz
+c3-fw/*img

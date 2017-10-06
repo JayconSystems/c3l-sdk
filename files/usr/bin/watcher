@@ -3,7 +3,7 @@
 ## Watchdog script to reset listener hardware if the c3listener
 ## process has failed to restart.
 
-MAX_DOWNTIME_SEC=30
+MAX_DOWNTIME_SEC=300
 
 get_pids() {
     pgrep c3listener

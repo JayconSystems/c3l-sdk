@@ -3,7 +3,26 @@
 ## Watchdog script to reset listener hardware if the c3listener
 ## process has failed to restart.
 
-MAX_DOWNTIME_SEC=300
+set -e
+
+# Defaults
+DEFAULT_TIMEOUT=300
+DEFAULT_CONFIG_FILE="/etc/c3listener.conf"
+
+# Config file is first arg, or falls back to /etc
+CONFIG_FILE=$1
+if [ -z ${CONFIG_FILE} ]; then
+    CONFIG_FILE=$DEFAULT_CONFIG_FILE
+fi
+
+# Try to find the appropriate config
+if [ -e $CONFIG_FILE ]; then
+    TIMEOUT=$(awk -F'[;=]' '/watchdog_timeout/ { print $2 }' $CONFIG_FILE)
+fi
+
+if [ -z ${TIMEOUT} ]; then
+    TIMEOUT=DEFAULT_TIMEOUT
+fi
 
 get_pids() {
     pgrep c3listener
@@ -18,9 +37,9 @@ child_still_running_p() {
 }
 
 LAST_PID=0
-DEADLINE=$(( $(date +%s) + MAX_DOWNTIME_SEC ))
+DEADLINE=$(( $(date +%s) + TIMEOUT ))
 
-logger "c3listener Watchdog Started"
+logger "c3listener Watchdog Started, timeout = $TIMEOUT seconds"
 
 while /bin/true; do
     ppid=$(get_parent_pid)
@@ -32,7 +51,7 @@ while /bin/true; do
     fi
 
     if child_still_running_p $ppid; then
-	DEADLINE=$(( $(date +%s) + MAX_DOWNTIME_SEC ))
+	DEADLINE=$(( $(date +%s) + TIMEOUT ))
     fi
 
     if [ $(date +%s) -gt $DEADLINE ]; then

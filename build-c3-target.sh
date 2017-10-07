@@ -10,11 +10,11 @@ if [ ! -e ${TARGET}.config ]; then
     exit 1
 fi
 
-gosu openwrt ./scripts/feeds update -a
-gosu openwrt ./scripts/feeds install \
-     bluez-libs expat glib2 \
-     dbus c3listener libical \
-     c3-listener-hw-support c3-raspi-support
+./scripts/feeds update c3
+./scripts/feeds install \
+     c3listener \
+     c3-listener-hw-support \
+     c3-raspi-support
 
 FW_OUTPUT_DIR="c3-fw"
 VERSION=$(awk -F= '/PKG_VERSION:/ {print $2}' feeds/c3/c3listener/Makefile)
@@ -35,16 +35,15 @@ fi
 
 if [ -e $OUT_FILE ]; then
     echo "Output file: ${OUT_FILE} found. Not rebuilding it."
-    exit 2
+    exit 0
 fi
 
-(gosu openwrt cp ${TARGET}.config .config
- gosu openwrt make defconfig
- gosu openwrt make clean
- gosu openwrt make $@
-) 2>&1 > build-${TARGET}.log
+(cp ${TARGET}.config .config
+ make defconfig
+ make clean
+ make $@
+) 2>&1 |tee build-${TARGET}.log
 if [ "${SRC_FILE}x" == "x" ]; then
     SRC_FILE=$(find ./bin/ar71xx -name "*squashfs-sysupgrade.bin" -print -quit)
 fi
 cp "${SRC_FILE}" "${OUT_FILE}"
-fi
